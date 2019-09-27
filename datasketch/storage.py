@@ -42,6 +42,17 @@ def ordered_storage(config, name=None):
                 {'env': 'REDIS_HOSTNAME',
                  'default': 'localhost'}
 
+            Dynamodb storage config example:
+                {
+                    'type': 'ddb',
+                    'basename': 'ddb_table',
+                    'meta': {
+                        'region': 'us-east-1',
+                        'read_capacity': 1,
+                        'write_capacity': 1
+                    }
+                }
+
             For a full example, see :ref:`minhash_lsh_at_scale`
 
         name (bytes, optional): A reference name for this storage container.
@@ -451,12 +462,11 @@ def _random_name(length):
 if ddb is not None:
     class ModelMeta(MetaModel):
         def __new__(cls, name, bases, d, **kwargs):
-            d['Meta'] = type('Meta', (), {
-                'table_name': make_safe_table_name(kwargs['table_name']),
-                'region': kwargs['config']['region'],
-                'read_capacity_units': kwargs['config']['read_capacity'],
-                'write_capacity_units': kwargs['config']['write_capacity']
-            })
+            meta = {
+                **{'table_name': make_safe_table_name(kwargs['table_name'])}
+                **kwargs['config']['meta']
+            }
+            d['Meta'] = type('Meta', (), meta)
             return MetaModel.__new__(cls, name, bases, d)
         def __init__(self, *args, **kwargs):
             del kwargs['table_name']
