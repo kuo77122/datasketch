@@ -551,4 +551,4 @@ if ddb is not None:
         def insert(self, key, *vals, **kwargs):
             with self.model_class.batch_write() as batch:
                 for val in vals:
-                    batch.save(self.model_class(key, val.decode('utf-8')))
+                    batch.save(self.model_class(key, val))
