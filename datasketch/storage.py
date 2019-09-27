@@ -516,7 +516,7 @@ if ddb is not None:
             with self.model_class.batch_write() as batch:        
                 for val in vals:
                     ulid_str = ulid.new().str
-                    batch.save(self.model_class(key.decode('utf-8'), ulid_str, value = val))
+                    batch.save(self.model_class(key, ulid_str, value = val))
                     
         def size(self):
             return self.model_class.count()
