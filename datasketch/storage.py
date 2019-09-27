@@ -463,9 +463,9 @@ if ddb is not None:
     class ModelMeta(MetaModel):
         def __new__(cls, name, bases, d, **kwargs):
             meta = {
-                **{'table_name': make_safe_table_name(kwargs['table_name'])},
-                **kwargs['config']['meta']
+                'table_name': make_safe_table_name(kwargs['table_name'])
             }
+            meta.update(kwargs['config']['meta'])
             d['Meta'] = type('Meta', (), meta)
             return MetaModel.__new__(cls, name, bases, d)
         def __init__(self, *args, **kwargs):
